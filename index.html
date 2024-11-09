@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="ro">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Referințe din studiul despre cum raționăm</title>
+        <link rel="icon" type="image/png" href="favicon.png" />
+        <style>
+            html {
+                scroll-behavior: smooth; /* Enable smooth scrolling */
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+                line-height: 1.6;
+                background-color: #f5f6fa;
+            }
+
+            h1 {
+                color: #2c3e50;
+                text-align: center;
+                border-bottom: 2px solid #9b59b6;
+                padding-bottom: 10px;
+                margin-bottom: 40px;
+            }
+
+            h2 {
+                color: #2c3e50;
+                margin-top: 40px;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #d2b4de;
+                scroll-margin-top: 80px; /* Ensures headings aren't hidden under floating TOC */
+            }
+
+            .quote-container {
+                margin: 20px 0;
+                padding: 20px;
+                background-color: white;
+                border-left: 4px solid #9b59b6;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(155, 89, 182, 0.1);
+            }
+
+            .quote {
+                font-style: italic;
+                text-align: justify;
+                color: #34495e;
+                margin-bottom: 15px;
+                line-height: 1.8;
+            }
+
+            .attribution {
+                color: #7f8c8d;
+                font-size: 0.9em;
+                padding-top: 10px;
+                border-top: 1px solid #e8daef;
+            }
+
+            .attribution a {
+                color: #8e44ad;
+                text-decoration: none;
+                display: inline-block;
+                margin-top: 5px;
+            }
+
+            .attribution a:hover {
+                text-decoration: underline;
+                color: #6c3483;
+            }
+
+            /* Table of Contents Styles */
+            .toc {
+                position: fixed;
+                right: 20px;
+                top: 20px;
+                background: white;
+                padding: 20px 20px 20px 50px;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(155, 89, 182, 0.1);
+                max-width: 250px;
+                z-index: 1000;
+                transition: all 0.2s ease;
+                overflow: hidden;
+            }
+
+            .toc.collapsed {
+                max-width: 45px;
+                padding: 0;
+                height: 150px; /* Just enough for button and vertical text */
+            }
+
+            .toc-toggle {
+                position: absolute;
+                left: 0;
+                top: 0;
+                transform: none;
+                background: transparent;
+                color: #8e44ad;
+                border: none;
+                padding: 12px;
+                cursor: pointer;
+                font-size: 1.8em;
+                width: 45px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .toc-toggle:hover {
+                color: #6c3483;
+            }
+
+            .toc.collapsed .toc-content {
+                opacity: 0;
+                pointer-events: none;
+            }
+
+            .toc-content {
+                transition: opacity 0.2s ease;
+                margin-left: 10px;
+                opacity: 1;
+            }
+
+            .toc h3 {
+                margin-top: 0;
+                color: #2c3e50;
+                font-size: 1.1em;
+                padding-bottom: 10px;
+                border-bottom: 1px solid #e8daef;
+            }
+
+            .toc ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .toc li {
+                margin: 10px 0;
+            }
+
+            .toc a {
+                color: #8e44ad;
+                text-decoration: none;
+                font-size: 0.9em;
+                display: block;
+                padding: 5px 0;
+                transition: color 0.2s;
+            }
+
+            .toc a:hover {
+                color: #6c3483;
+                text-decoration: underline;
+            }
+
+            /* Mobile Responsiveness */
+            @media screen and (max-width: 1200px) {
+                body {
+                    margin: 0 20px;
+                }
+
+                .toc {
+                    position: fixed;
+                    top: 10px;
+                    right: 10px;
+                    max-width: 80%;
+                    margin-bottom: 0;
+                }
+
+                .toc-toggle {
+                    display: flex;
+                }
+            }
+
+            @media screen and (max-width: 600px) {
+                body {
+                    padding: 10px;
+                    margin: 0 10px;
+                }
+
+                .quote-container {
+                    padding: 15px;
+                    margin: 15px 0;
+                }
+
+                h1 {
+                    font-size: 1.5em;
+                    margin-top: 60px;
+                }
+
+                h2 {
+                    font-size: 1.3em;
+                }
+
+                .quote {
+                    font-size: 0.95em;
+                }
+
+                .attribution {
+                    font-size: 0.85em;
+                }
+            }
+
+            /* Add new styles for the vertical title */
+            .toc-vertical-title {
+                position: absolute;
+                left: 9px;
+                top: 45px;
+                transform: rotate(-180deg);
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                color: #8e44ad;
+                font-weight: bold;
+                font-size: 0.9em;
+                letter-spacing: 2px;
+                padding: 10px 0;
+                text-transform: uppercase;
+                transition: opacity 0.2s ease;
+                cursor: pointer;
+            }
+
+            .toc-vertical-title:hover {
+                color: #6c3483;
+            }
+
+            .toc:not(.collapsed) .toc-vertical-title {
+                opacity: 0;
+            }
+
+            @media screen and (max-width: 1200px) {
+                .toc-vertical-title {
+                    left: 9px;
+                    font-size: 0.8em;
+                    top: 40px;
+                }
+            }
+
+            .toc.collapsed .toc-vertical-title {
+                left: 12px;
+            }
+        </style>
+    </head>
+    <body>
+        <nav class="toc collapsed">
+            <button class="toc-toggle" aria-label="Show table of contents">
+                ≡
+            </button>
+            <div class="toc-vertical-title">Cuprins</div>
+            <div class="toc-content">
+                <h3>Cuprins</h3>
+                <ul>
+                    <li><a href="#pensii">Despre pensiile speciale</a></li>
+                    <li>
+                        <a href="#paduri">Despre tăierea ilegală a pădurilor</a>
+                    </li>
+                    <li><a href="#integritate">Despre integritate</a></li>
+                    <li><a href="#avort">Despre avort</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <h1>Referințe din studiul despre cum raționăm</h1>
+
+        <h2 id="pensii">Despre pensiile speciale</h2>
+
+        <div class="quote-container">
+            <div class="quote">
+                Indiferent cu ce inițiativă va veni Guvernul prin care se
+                statuează sau perpetuează dreptul unor persoane de a beneficia
+                de pensii speciale, noi vom veni cu amendamente pentru
+                eliminarea lor, până când coaliția pentru apărarea privilegiilor
+                specialilor va înțelege că ele nu au ce căuta în România...
+                Nemulțumirea majoră a românilor este legată de prelungirea
+                sistemului pensiilor speciale pentru încă 38 ani. Copiii și
+                nepoții noștri vor munci să plătească pensiile specialilor de
+                azi, de mâine și de peste aproape o jumătate de secol!
+            </div>
+            <div class="attribution">
+                - Irineu Darău, senator USR, 11 decembrie 2023
+                <br />
+                <a
+                    href="https://usr.ro/2023/12/11/usr-a-cerut-inca-o-data-desfiintarea-unei-categorii-de-pensii-speciale-celelalte-partide-au-votat-pentru-mentinere/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Poziția PNL a fost una consecventă pe acest subiect, ca atare am
+                avut de-a lungul timpului mai multe demersuri pentru eliminarea
+                pensiilor speciale ale parlamentarilor. Mesajul votului de azi,
+                ca și cel al reformei pensiilor speciale pe care urmează să o
+                votăm, este că vrem să așezăm societatea și instituțiile
+                statului pe reguli unitare și pe valori comune care să fie
+                respectate și urmate de toți, fără excepții... Prin acest vot,
+                majoritatea parlamentară a arătat responsabilitate și faptul că
+                interesul public este pe primul plan. Decizia de astăzi, pe care
+                PNL a susținut-o cu fermitate, este cea corectă față de România
+                și față de români.
+            </div>
+            <div class="attribution">
+                - Nicolae Ciucă, președinte PNL, 27 iunie 2023
+                <br />
+                <a
+                    href="https://media.pnl.ro/presedintele-pnl-nicolae-ciuca-parlamentarii-pnl-au-votat-legea-pentru-eliminarea-pensiilor-speciale-ale-parlamentarilor/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Angajamentul pe care PSD l-a luat, împreună cu partenerii de
+                guvernare, este pentru reforme reale, palpabile, nu mimate doar
+                de dragul populismului. Istoria pensiilor speciale, care durează
+                de prea mult timp, va fi încheiată de actuala coaliție. Acest
+                lucru demonstrează că alții, care s-au bătut cu pumnul în piept
+                că vor rezolva această problemă, pur și simplu nu și-au
+                dorit-o... Arătăm clar prin fapte, nu prin vorbe sterile, că
+                măsurile pe care le implementăm au un impact real și au la bază
+                principiul echității sociale.
+            </div>
+            <div class="attribution">
+                - Paul Stănescu, secretar general PSD, 3 august 2023
+                <br />
+                <a
+                    href="https://www.psd.ro/spunem-odata-pentru-totdeauna-stop-pensiilor-speciale/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Am văzut actuala coaliție cum se preface că taie pensiile
+                speciale. Nimic mai fals! Pe parcursul comisiilor, dezbaterilor
+                de la Senat, din Camera Deputaților, prin amendamentele depuse
+                de colegii mei, am încercat să scurtăm perioadele în care se
+                taie pensiile cu adevărat nesimțite, cu adevărat speciale și am
+                încercat să reducem cuantumul pensiilor nesimțite, pensiilor
+                speciale, pensiilor mai mari decât salariul președintelui... AUR
+                se opune pensiilor nesimțite și pensiilor speciale pentru
+                oamenii care au pensii de 7000 – 8000 – 10000 de euro, nu cei cu
+                pensii de 3000 – 3500 de lei, care vor fi afectați de legea care
+                tocmai a fost votată de coaliția de guvernare aici în
+                Parlamentul României.
+            </div>
+            <div class="attribution">
+                - George Simion, președinte AUR, 18 octombrie 2023
+                <br />
+                <a
+                    href="https://partidulaur.ro/aur-vrea-eliminarea-cu-adevarat-a-pensiilor-nesimtite/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Numărul beneficiarilor de pensii de serviciu a fost, în august
+                2024, de 11.794 persoane, în creştere cu 98 de persoane
+                comparativ cu luna anterioară... Prin urmare, din ianuarie până
+                în august 2024 avem cu 908 «speciali» mai mult. Cea mai mare
+                pensie medie de serviciu din august 2024, de 25.184 lei.
+            </div>
+            <div class="attribution">
+                - Dan Popa, HotNews, 28 octombrie 2024
+                <br />
+                <a
+                    href="https://hotnews.ro/guvernul-a-trimis-la-bruxelles-planul-de-reforma-a-pensiilor-speciale-1822186"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <h2 id="paduri">Despre tăierea ilegală a pădurilor</h2>
+
+        <div class="quote-container">
+            <div class="quote">
+                Fără nicio dezbatere, fără niciun argument, refuzând cererea
+                societății civile de a participa la dezbateri, PSD și PNL au
+                votat pentru protejarea mafiei lemnului, mafiei gunoaielor și
+                atâtor altor mafii care ne distrug mediul înconjurător și pun în
+                pericol viitorul și sănătatea românilor. Costul lipsei de
+                acțiune pe infracțiunile de mediu se traduce în vieți omenești.
+                Nu vom renunța să susținem înființarea «DNA-ului pădurilor»...
+                Groaza PSD și PNL de a avea o discuție reală pe proiect arată
+                cum vor să acopere în continuare mafia lemnului.
+            </div>
+            <div class="attribution">
+                - Silviu Dehelean & Diana Buzoianu, deputați USR, 30 octombrie
+                2023
+                <br />
+                <a
+                    href="https://usr.ro/2023/10/30/psd-si-pnl-ajuta-mafia-lemnului-si-resping-propunerea-usr-de-infiintare-a-dna-ului-padurilor/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Senatorul Liviu Dumitru Voiculescu a anunțat faptul că pentru
+                limitarea tăierii ilegale de arbori și furtul de material
+                lemnos, fondul forestier național va fi monitorizat prin
+                intermediul unor sisteme integrate de supraveghere video.
+                «Această măsură este menită să limiteze tăierile ilegale de
+                copaci și transportul ilicit de material lemnos din pădurile
+                României. Tehnologia de monitorizare, bazată pe inteligență
+                artificială și interconectată cu SUMAL (Sistemul de Urmărire a
+                Materialului Lemnos), va permite reducerea numărului de
+                transporturi de material lemnos fără documente de proveniență.»
+            </div>
+            <div class="attribution">
+                - Articol de presă PNL, 15 februarie 2024
+                <br />
+                <a
+                    href="https://media.pnl.ro/senatorul-liviu-dumitru-voiculescu-sisteme-de-supraveghere-video-pentru-prevenirea-furtului-de-material-lemnos/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                PSD condamnă cu fermitate decizia Guvernului Cîțu de a se
+                poziționa pe contrasens cu Strategia Forestieră Planificată a
+                Uniunii Europene privind protejarea pădurilor... Poziția
+                Guvernului în această chestiune este profund anti-națională și
+                vine în completarea acțiunilor președintelui Iohannis care a
+                demonstrat de-a lungul timpului apropierea de unii exploatatori
+                străini din acest sector.
+            </div>
+            <div class="attribution">
+                - Biroul de presă PSD, 21 iulie 2021
+                <br />
+                <a
+                    href="https://www.psd.ro/psd-se-opune-politicii-anti-nationale-a-guvernului-citu-in-domeniul-forestier-si-va-initia-o-lege-pentru-interzicerea-taierii-arborilor-sanatosi-2/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Am văzut actuala coaliție cum se preface că taie pensiile
+                speciale. Nimic mai fals! «Odată ce treci de drumurile
+                principale, de suprafețele împădurite, vezi din dronă, din avion
+                sau din elicopter suprafețe mari tăiate și felul în care sunt
+                jefuite pădurile României… Adevărul este că avem de a face cu un
+                dezastru natural, un jaf în toată regula. Sunt milioane de metri
+                cubi scoși ilegal din păduri, dar cu acordul cuiva, cu acordul
+                sistemului putred.»
+            </div>
+            <div class="attribution">
+                - George Simion, președinte AUR, 19 august 2024
+                <br />
+                <a
+                    href="https://partidulaur.ro/prin-planul-simion-ne-am-propus-sa-impadurim-un-milion-de-hectare-in-urmatorii-10-ani-video/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Textul Codului silvic adoptat de guvern pare făcut pentru
+                dezvoltatorii imobiliari, pentru tăietorii ilegali de lemn și
+                pentru afaceriștii din industria de profil. Noua lege, adoptată
+                de executiv și care, potrivit ministrului mediului, liberalul
+                Mircea Fechet va trece printr-o procedură de urgență prin
+                legislativ, renunță la una dintre micile măsuri împotriva
+                marilor furturi: confiscarea vehiculelor care transportă ilegal
+                material lemnos.
+            </div>
+            <div class="attribution">
+                - Sabina Fati, jurnalist la DW, 1 aprilie 2024
+                <br />
+                <a
+                    href="https://p.dw.com/p/4eJ44"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <h2 id="integritate">Despre integritate</h2>
+
+        <div class="quote-container">
+            <div class="quote">
+                Parchetul European (EPPO) a decis să ancheteze activitatea
+                Elenei Lasconi, de la primăria din Câmpulung... Ancheta vizează
+                posibile fapte de corupţie şi fraude îndreptate împotriva
+                intereselor financiare ale Uniunii Europene. Pe scurt, cetăţenii
+                au sesizat organele de cercetare penală, în legătură cu modul în
+                care Lasconi ar fi sustras importante sume de bani din proiecte
+                europene destinate celor mai săraci români din localitatea
+                argeşeană.
+            </div>
+            <div class="attribution">
+                - F.D., jurnalist la Bursa.ro, 6 septembrie 2024
+                <br />
+                <a
+                    href="https://www.bursa.ro/parchetul-european-a-decis-sa-ancheteze-activitatea-elenei-lasconi-de-la-primaria-campulung-07834350"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Teza lui Nicolae Ciucă, în baza căreia a devenit doctor în
+                Științe militare în 2003, include conținut plagiat în cel puțin
+                42 de pagini din totalul de 138. Conținutul din cel puțin 19
+                pagini a fost plagiat din alte două teze de doctorat susținute
+                anterior la Universitatea Națională de Apărare "Carol I" (UNAP),
+                una dintre ele coordonată chiar de îndrumătorul premierului.
+            </div>
+            <div class="attribution">
+                - Emilia Șercan, jurnalistă la PressOne, 18 ianuarie, 2022
+                <br />
+                <a
+                    href="https://pressone.ro/premierul-nicolae-ciuca-a-plagiat-in-teza-de-doctorat-printre-sursele-copiate-se-numara-alte-doua-teze-de-doctorat"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Faptele de care era acuzat Nicolae Ciucă s-au prescris în urmă
+                cu 15 ani, iar diploma este doar un act care certifică sau
+                atestă titlul de doctor și nu constituie un înscris oficial
+                fals, potricit ordonanței procurorilor din care dosarul penal
+                pentru plagiat al premierului a fost clasat.
+            </div>
+            <div class="attribution">
+                - Gabriel Pecheanu, jurnalist la MediaFax, 15 mai 2023
+                <br />
+                <a
+                    href="https://www.mediafax.ro/politic/dosarul-de-plagiat-al-lui-nicolae-ciuca-a-fost-clasat-motivele-procurorilor-21868141"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Jurnalist: Ai afirmat că nu ați intervenit niciodată pentru
+                nepotul dvs. Cum explicați angajarea lui în 2013 drept consilier
+                al ministrului Fondurilor Europene, Eugen Teodorovici? Nepotul
+                dvs. era atunci vânzător la benzinărie.<br /><br />
+                Marcel Ciolacu: Nepotul meu l-a cunoscut pe Teodorovici când a
+                venit să candideze la Buzău, a fost unul dintre tinerii care au
+                mers cu el prin Buzău și l-au susținut. Era consilier al
+                ministrului, pe alt domeniu. Din câte îmi amintesc, cu un sfert
+                de normă. Un lucru foarte bun pentru orice tânăr.<br /><br />
+                Eugen Teodorovici: L-am angajat consilier pe Mihai Ciolacu
+                pentru că am vrut să dau o șansă unui tânăr să cunoască un
+                domeniu nou, al fondurilor europene.
+            </div>
+            <div class="attribution">
+                - Sorin Semeniuc și Dan Tăpălagă, jurnaliști la G4Media, Marcel
+                Ciolacu, președinte PSD, Eugen Teodorovici, senator PSD, 28
+                octombrie 2024
+                <br />
+                <a
+                    href="https://www.g4media.ro/co-fondatorul-firmei-cu-care-este-asociat-nepotul-premierului-a-fost-condamnat-pentru-dare-de-mita-ca-sa-obtina-avizarea-unor-farmacii-rurale-asociatul-lui-mihai-ciolacu-a-imprumutat-psd-cu-445-000.html"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Deși a negat de-a lungul timpului implicarea în afacerile
+                nepotului, în declarația de avere a președintelui PSD apare un
+                împrumut de 490.000 de lei dat acestuia, care, potrivit
+                jurnaliștilor de la G4media, ar fi fost folosit într-o altă
+                afacere imobiliară, unde ar lucra cu soția ministrului
+                Transportului, Sorin Grindeanu.
+            </div>
+            <div class="attribution">
+                - Monica Bonea, jurnalistă la Digi24, 29 octombrie 2024
+                <br />
+                <a
+                    href="https://www.digi24.ro/stiri/actualitate/politica/controverse-in-jurul-afacerilor-nepotului-lui-marcel-ciolacu-reactia-liderilor-psd-2986793"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                George Simion: Am vândut haine de brand din Marea Britanie și
+                din Germania... Am câștigat bani.<br />
+                Valeriu Nicolae: Puțini, foarte puțini bani.<br />
+                George Simion: Scriptic, da.<br />
+                Valeriu Nicolae: Heh, deci ai făcut evaziune fiscală, asta
+                zici?<br />
+                George Simion: Da, ca 90% dintre antreprenorii români.
+            </div>
+            <div class="attribution">
+                - Valeriu Nicolae, jurnalist la Starea Nației și George Simion,
+                președinte AUR, 2 iunie 2024
+                <br />
+                <a
+                    href="https://www.youtube.com/watch?v=_LkIVUuB3gI&t=13m0s"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Urmărește interviul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Denise Rifai: Câți bani ați făcut din evaziune fiscală?<br />
+                George Simion: N-aș putea estima. Știu că am avut o afacere
+                care-mi aducea niște 5000-7000 de euro pe lună, ca antreprenor,
+                dar n-aș putea să vă spun cât am declarat și cât n-am declarat.
+            </div>
+            <div class="attribution">
+                - Denise Rifai, prezentatoare la Gândul, 29 august 2024
+                <br />
+                <a
+                    href="https://www.youtube.com/watch?v=V8twf5BdUQU&t=524s"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Urmărește interviul complet →</a
+                >
+            </div>
+        </div>
+
+        <h2 id="avort">Despre avort</h2>
+
+        <div class="quote-container">
+            <div class="quote">
+                Femeia este responsabilă de corpul ei. Eu nu sunt pentru avort
+                ca și contracepție, adică avem nevoie și de educație, dar femeia
+                poate să decidă că e vorba de corpul ei. Suntem în 2024, nu în
+                comuna primitivă.
+            </div>
+            <div class="attribution">
+                - Elena Lasconi, președinte USR, 3 septembrie 2024
+                <br />
+                <a
+                    href="https://www.youtube.com/watch?v=ZvBpX3LRm2s&t=1h16m38s"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Urmărește interviul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                România trebuie să adopte o strategie concretă privind limitarea
+                întreruperilor de sarcină. România a ajuns în ultima perioadă pe
+                un îngrijorător prim loc în Europa în ceea ce priveşte
+                avorturile. Spre exemplu, în anumite spitale din ţară se
+                efectuează, în medie, 16 întreruperi de sarcină zilnic...
+                Indubitabil, limitarea întreruperilor de sarcină este un subiect
+                foarte sensibil, care trebuie abordat din mai multe perspective:
+                sănătate publică, drepturile omului, educaţie şi acces la
+                servicii de sănătate.
+            </div>
+            <div class="attribution">
+                - Elena Hărătău, deputat PNL, 24 octombrie 2024
+                <br />
+                <a
+                    href="https://www.agerpres.ro/comunicate/2024/10/22/declaratie-de-presa-deputat-pnl-elena-haratau--1374785"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Sunt unul dintre susţinătorii familiei tradiţionale, dar eu cred
+                – şi am avut o discuţie lungă şi cu domnul Grindeanu şi mai ales
+                cu doamnele din echipă – va trebui în planul de guvernare să
+                venim şi cu un plan demografic, va trebui să dăm femeii
+                alternativa ca ultima alegere a sa să fie avortul. Normal, se
+                întâmplă să rămână însărcinată când este în studenţie, se
+                întâmplă să rămână însărcinată când niciunul dintre parteneri nu
+                are serviciu, atunci statul trebuie să intervină.
+            </div>
+            <div class="attribution">
+                - Marcel Ciolacu, președinte PSD, 5 octombrie 2024
+                <br />
+                <a
+                    href="https://www.news.ro/politic-intern/marcel-ciolacu-intrebat-despre-dreptul-la-avort-in-planul-de-guvernare-sa-venim-si-cu-un-plan-demografic-va-trebui-sa-dam-femeii-alternativa-ca-ultima-alegere-a-sa-sa-fie-avortul-1922401405102024101121755434"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Citește articolul complet →</a
+                >
+            </div>
+        </div>
+
+        <div class="quote-container">
+            <div class="quote">
+                Eu nu sunt de acord cu adăugarea printre drepturile fundamentale
+                a dreptului la avort. Altfel, eu consider că este opțiunea
+                fiecărei persoane de a decide... Sigur că este o traumă prin
+                care femeile trec în momentul avortului și mi-aș dori să li se
+                ofere consiliere psihologică și sprijin material în caz că
+                doresc să păstreze acel copil și să nu fie sub presiunea unui
+                bărbat care poate fi agresor, de exemplu, sau a unei familii
+                care le dă afară din casă dacă află că sunt însărcinate.
+            </div>
+            <div class="attribution">
+                - George Simion, președinte AUR, 29 august 2024
+                <br />
+                <a
+                    href="https://www.youtube.com/watch?v=V8twf5BdUQU&t=1646s"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >Urmărește interviul complet →</a
+                >
+            </div>
+        </div>
+
+        <footer
+            style="
+                margin-top: 60px;
+                padding: 20px;
+                text-align: center;
+                border-top: 1px solid #d2b4de;
+                color: #7f8c8d;
+                font-size: 0.9em;
+            "
+        >
+            Acest site a fost implementat de către <b>mrd. Radu Corbu</b> ca
+            parte a lucrării sale de disertație din cadrul Facultății de
+            Psihologie și Științe ale Educației, UBB Cluj-Napoca.
+            <br />
+            Contact:
+            <a
+                href="mailto:radu.g.corbu@gmail.com"
+                style="color: #8e44ad; text-decoration: none"
+                >radu.g.corbu@gmail.com</a
+            >.
+        </footer>
+
+        <script>
+            function toggleTOC() {
+                const toc = document.querySelector(".toc");
+                toc.classList.toggle("collapsed");
+
+                // Update the button's aria-label based on state
+                const isCollapsed = toc.classList.contains("collapsed");
+                document
+                    .querySelector(".toc-toggle")
+                    .setAttribute(
+                        "aria-label",
+                        isCollapsed
+                            ? "Show table of contents"
+                            : "Hide table of contents",
+                    );
+            }
+
+            // Add click handlers to both the button and vertical title
+            document
+                .querySelector(".toc-toggle")
+                .addEventListener("click", toggleTOC);
+            document
+                .querySelector(".toc-vertical-title")
+                .addEventListener("click", toggleTOC);
+        </script>
+    </body>
+</html>
